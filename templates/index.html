@@ -6,7 +6,12 @@
 </head>
 <body>
     <div>
-        <a href="{{ url_for('checkout') }}">Checkout</a>
+        {% for product in products %}
+            <h2>{{ product.title }}</h2>
+            <h3>{{ product.price }}</h3>
+            <p>{{ product.description }}</p>
+            <a href="{{ url_for('checkout', product_id=product.id) }}">Checkout</a>
+        {% endfor %}
     </div>
 </body>
 </html>

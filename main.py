@@ -13,12 +13,25 @@ stripe.api_key = os.environ.get('STRIPE_API_KEY')
 
 app = Flask(__name__)
 
+YOUR_DOMAIN = 'http://127.0.0.1:5000/'
+
 # CONNECT TO DB
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///shop.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
-YOUR_DOMAIN = 'http://127.0.0.1:5000/'
+
+# CONFIGURE TABLES
+class ShopItem(db.Model):
+    __tablename__ = 'shop_items'
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(250), nullable=False)
+    price = db.Column(db.Float, nullable=False)
+    description = db.Column(db.Text, nullable=False)
+
+
+with app.app_context():
+    db.create_all()
 
 
 @app.route('/create-checkout-session', methods=['GET', 'POST'])
@@ -44,12 +57,14 @@ def create_checkout_session():
 
 @app.route('/')
 def home():
-    return render_template('index.html')
+    products = ShopItem.query.all()
+    return render_template('index.html', products=products)
 
 
-@app.route('/checkout')
-def checkout():
-    return render_template('checkout.html')
+@app.route('/checkout/<int:product_id>', methods=['GET', 'POST'])
+def checkout(product_id):
+    requested_product = ShopItem.query.get(product_id)
+    return render_template('checkout.html', product=requested_product)
 
 
 if __name__ == '__main__':
