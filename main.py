@@ -5,12 +5,18 @@ Python 3.6 or newer required.
 """
 import os
 from flask import Flask, redirect, request, render_template
+from flask_sqlalchemy import SQLAlchemy
 
 import stripe
 # This is your test secret API key.
 stripe.api_key = os.environ.get('STRIPE_API_KEY')
 
 app = Flask(__name__)
+
+# CONNECT TO DB
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///shop.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app)
 
 YOUR_DOMAIN = 'http://127.0.0.1:5000/'
 
