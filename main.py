@@ -8,7 +8,7 @@ from flask import Flask, redirect, request, render_template
 
 import stripe
 # This is your test secret API key.
-stripe.api_key = 'sk_test_51LnQtrGbuqleXZx6wfUJ704aZjcndAjRz3gnUxmwour6PH42PeKwZxvBiRoMIQ8Fo8DiaSxyERzibJqlTVIcOQ7l00JnpjA7Y4'
+stripe.api_key = os.environ.get('STRIPE_API_KEY')
 
 app = Flask(__name__)
 
